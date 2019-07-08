@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.StringJoiner;
 
 import org.springframework.http.server.PathContainer;
 import org.springframework.http.server.PathContainer.Element;
@@ -420,6 +421,7 @@ public class PathPattern implements Comparable<PathPattern> {
 		return this.parser.parse(file2 + (firstExtensionWild ? secondExtension : firstExtension));
 	}
 
+	@Override
 	public boolean equals(@Nullable Object other) {
 		if (!(other instanceof PathPattern)) {
 			return false;
@@ -430,10 +432,12 @@ public class PathPattern implements Comparable<PathPattern> {
 				this.caseSensitive == otherPattern.caseSensitive);
 	}
 
+	@Override
 	public int hashCode() {
 		return (this.patternString.hashCode() + this.separator) * 17 + (this.caseSensitive ? 1 : 0);
 	}
 
+	@Override
 	public String toString() {
 		return this.patternString;
 	}
@@ -465,13 +469,13 @@ public class PathPattern implements Comparable<PathPattern> {
 	}
 
 	String toChainString() {
-		StringBuilder buf = new StringBuilder();
+		StringJoiner stringJoiner = new StringJoiner(" ");
 		PathElement pe = this.head;
 		while (pe != null) {
-			buf.append(pe.toString()).append(" ");
+			stringJoiner.add(pe.toString());
 			pe = pe.next;
 		}
-		return buf.toString().trim();
+		return stringJoiner.toString();
 	}
 
 	/**
